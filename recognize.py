@@ -36,7 +36,8 @@ def segment(image, threshold=25):
     thresholded = cv2.threshold(diff, threshold, 255, cv2.THRESH_BINARY)[1]
 
     # get the contours in the thresholded image
-    (_, cnts, _) = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    #(_, cnts, _) = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    (cnts, _) = cv2.findContours(thresholded.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     # return None, if no contours detected
     if len(cnts) == 0:
@@ -86,7 +87,8 @@ def count(thresholded, segmented):
     circular_roi = cv2.bitwise_and(thresholded, thresholded, mask=circular_roi)
 
     # compute the contours in the circular ROI
-    (_, cnts, _) = cv2.findContours(circular_roi.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    #(_, cnts, _) = cv2.findContours(circular_roi.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
+    (cnts, _) = cv2.findContours(circular_roi.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 
     # initalize the finger count
     count = 0
@@ -148,6 +150,7 @@ if __name__ == "__main__":
         gray = cv2.cvtColor(roi, cv2.COLOR_BGR2GRAY)
         gray = cv2.GaussianBlur(gray, (7, 7), 0)
 
+        ''''''
         # to get the background, keep looking till a threshold is reached
         # so that our weighted average model gets calibrated
         if num_frames < 30:
@@ -176,13 +179,13 @@ if __name__ == "__main__":
                 
                 # show the thresholded image
                 cv2.imshow("Thesholded", thresholded)
-
+        
         # draw the segmented hand
         cv2.rectangle(clone, (left, top), (right, bottom), (0,255,0), 2)
 
         # increment the number of frames
         num_frames += 1
-
+        
         # display the frame with segmented hand
         cv2.imshow("Video Feed", clone)
 
